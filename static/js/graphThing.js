@@ -211,10 +211,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 else if (information[0] == "LSFY") {
 
-                    let minXVisible = math.floor((-amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
-                    let minYVisible = math.floor((-amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
-                    let maxXVisible = math.floor((amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
-                    let maxYVisible = math.floor((amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
+                    let minXVisible = math.ceil((-amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
+                    let minYVisible = math.ceil((-amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
+                    let maxXVisible = math.ceil((amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
+                    let maxYVisible = math.ceil((amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
                     
                     let lastPoint = null
 
@@ -258,10 +258,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             else if (information[0] == "LSFY") {
 
-                let minXVisible = math.floor((-amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
-                let minYVisible = math.floor((-amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
-                let maxXVisible = math.floor((amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
-                let maxYVisible = math.floor((amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
+                let minXVisible = math.ceil((-amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
+                let minYVisible = math.ceil((-amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
+                let maxXVisible = math.ceil((amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
+                let maxYVisible = math.ceil((amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
                 
                 let lastPoint = null
 
