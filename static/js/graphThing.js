@@ -211,6 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 else if (information[0] == "LSFY") {
 
+                    //No need to fix this bruh
+
                     let minXVisible = math.ceil((-amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
                     let minYVisible = math.ceil((-amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
                     let maxXVisible = math.ceil((amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
