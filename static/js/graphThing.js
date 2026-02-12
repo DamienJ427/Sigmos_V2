@@ -96,24 +96,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const endX = Math.ceil((width - offsetX) / squareSizeX);
 
         for (let x = startX; x <= endX; x++) {
+
+            //if(x % 4 == 0) {ctx.lineWidth = 2}
+
             const xPos = x * squareSizeX + offsetX;
             ctx.beginPath();
             ctx.strokeStyle = '#2b2b2b';
             ctx.moveTo(xPos, 0);
             ctx.lineTo(xPos, height);
             ctx.stroke();
+            ctx.lineWidth = 1
         }
 
         const startY = Math.floor((-offsetY) / squareSizeY);
         const endY = Math.ceil((height - offsetY) / squareSizeY);
 
         for (let y = startY; y <= endY; y++) {
+
+            //if(y % 4 == 0) {ctx.lineWidth = 2}
+
             const yPos = y * squareSizeY + offsetY;
             ctx.beginPath();
             ctx.strokeStyle = '#2b2b2b';
             ctx.moveTo(0, yPos);
             ctx.lineTo(width, yPos);
             ctx.stroke();
+            ctx.lineWidth = 1;
         }
 
         ctx.lineWidth = 3;
