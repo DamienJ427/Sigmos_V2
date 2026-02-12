@@ -4,10 +4,10 @@
 ## Purpose:
 
 This tuff ahh calculator was made because I felt like Sigmos was simply too weak
-so of course I had to create Sigmos_V2, the obviously better version. Hence, the name, the addition of '_V2'.
+so of course I had to create Sigmos_V2, the obviously better version. Hence, the name, 'Sigmos' with the addition of '_V2'.
 
 
 ## Features:
 
-For now, it can do pretty basic math on the calculator, play phonk, and graph points.
+For now, it can do pretty basic math on the calculator, play phonk, and graph points, and graph basic lines is point-slope form (mostly correctly).
 This features list will be longer soon I swear...
