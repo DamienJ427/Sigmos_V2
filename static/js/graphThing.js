@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function resizeCanvasToParent() {
         const parent = canvas.parentElement;
         const rect = parent.getBoundingClientRect();
-        const scale = window.devicePixelRatio || 1;
+        const scale = 1;
 
         canvas.style.width  = rect.width + 'px';
         canvas.style.height = rect.height + 'px';
