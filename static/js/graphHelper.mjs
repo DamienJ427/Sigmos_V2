@@ -60,8 +60,8 @@ export function getEquationTypeFromInput(equation) {
         var containsX = eq.includes("x")
 
         if(!containsX && !containsY) { return 'invalid'}
-        if((eqSplit[0].includes("y") && eqSplit[1].includes("y")) || (eqSplit[0].includes("x") && eqSplit[1].includes("x"))) {
-            return "invalid"
+        if((eqSplit[0].includes("y") && eqSplit[1].includes("y")) || (eqSplit[0].includes("x") && eqSplit[1].includes("x"))) { 
+            return "invalid (for now)"
         }
 
         var sideWithX = null

@@ -4,11 +4,7 @@ math.config({
   number: 'number'
 });
 
-function makeGood(x) {
-        const bn = math.bignumber(x);
-        const eps = math.bignumber('1e-30');
-        return math.smaller(math.abs(bn), eps) ? math.bignumber(0) : bn;
-}
+
 
 function doMath(mathToDo) {
 
@@ -17,7 +13,6 @@ function doMath(mathToDo) {
         mathToDo = mathToDo.replaceAll('√', 'sqrt')
         mathToDo = mathToDo.replaceAll('π', 'pi')
 
-        console.log(mathToDo)
         return mathToDo
 }
 
@@ -96,11 +91,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let x = startX; x <= endX; x++) {
 
-            //if(x % 4 == 0) {ctx.lineWidth = 2}
+            /*
+            if(x % 4 == 0) {ctx.strokeStyle = '#000000'}
+            else{ctx.strokeStyle = '#666666'}
+            */
 
             const xPos = x * squareSizeX + offsetX;
             ctx.beginPath();
-            ctx.strokeStyle = '#666666';
             ctx.moveTo(xPos, 0);
             ctx.lineTo(xPos, height);
             ctx.stroke();
@@ -112,7 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let y = startY; y <= endY; y++) {
 
-            //if(y % 4 == 0) {ctx.lineWidth = 2}
+            /*
+            if(y % 4 == 0) {ctx.strokeStyle = '#000000'}
+            else{ctx.strokeStyle = '#666666'}
+            */
 
             const yPos = y * squareSizeY + offsetY;
             ctx.beginPath();
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ctx.beginPath();
         ctx.moveTo((width / 2) + offsetX, height);
-        ctx.lineTo((width / 2 + offsetX), 0);
+        ctx.lineTo((width / 2) + offsetX, 0);
         ctx.strokeStyle = 'rgb(0, 0, 0)';;
         ctx.stroke();
 
@@ -171,20 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-    // REFRESH THE STUIPD GRAPH
+    
 
-    // Ok so idk what I was on when I wrote this but holy crap it's TUFF.
+    // REFRESH THE STUIPD GRAPH
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     function drawLine(x1, y1, x2, y2, i) {
         let startingCords = convertToCanvasCoords(x1, y1);
         let endingCords = convertToCanvasCoords(x2, y2);
-
-        let minXVisible = math.ceil((-amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
-        let minYVisible = math.ceil((-amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
-        let maxXVisible = math.ceil((amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
-        let maxYVisible = math.ceil((amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
 
         ctx.beginPath();
         ctx.lineWidth = 3;
@@ -206,76 +201,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function graphLineFromInfo(information, i) {
 
-        let minXVisible = math.ceil((-amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
-        let minYVisible = math.ceil((-amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
-        let maxXVisible = math.ceil((amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX)))
-        let maxYVisible = math.ceil((amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY)))
+        let minXVisible = math.ceil((-amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX))) - 1
+        let minYVisible = math.ceil((-amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY))) - 1
+        let maxXVisible = math.ceil((amountOfSquaresX / 2) - (math.floor(offsetX / squareSizeX))) + 1
+        let maxYVisible = math.ceil((amountOfSquaresY / 2) + (math.floor(offsetY / squareSizeY))) + 1
 
         var indexOfColor = i - 1
+
         while(indexOfColor > listOfColors.length - 1) {
             indexOfColor = indexOfColor - (listOfColors.length - 1)
         }
         
-
         if (information[0] == 'point') {
             plotPoint(information[1], information[2], indexOfColor)
             return
         }
 
-        // So they forced me to use the stupid calc thing that was made by Epstein probably...
-
         else if (information[0] == "LSFY") {
 
             const soThatJSdoesntKillMe = doMath(information[2]);
 
-            let lastPoint = null
-            let lastSlope = null
+            let step = Math.max(0.05, 1 / squareSizeX);
 
-            let step = Math.max(0.1, 1 / squareSizeX);
+            let previousPoint = null;
 
-            for(let x = minXVisible - 2; x <= maxXVisible; x += step) {
-                        
-                let xEquation = soThatJSdoesntKillMe.replaceAll("x", "(" + x.toString() + ")")
-                        
+            for (let x = minXVisible; x <= maxXVisible; x += step) {
+
+                let xEquation = soThatJSdoesntKillMe.replaceAll("x", "(" + x.toString() + ")");
+
                 try {
-
                     let y = math.evaluate(xEquation);
 
-                    // The AI recommended !isFinite, js roll with it...
-                            
                     if (isNaN(y) || !isFinite(y)) {
-                        lastPoint = null;
+                        previousPoint = null;
                         continue;
                     }
-                            
-                    if (lastPoint == null) {
-                        lastPoint = [x, y]
-                        continue
+
+                    if (y < minYVisible - 5 || y > maxYVisible + 5) {
+                        previousPoint = null;
+                        continue;
                     }
 
-                    let slope = (lastPoint[1] - y) / (lastPoint[0] / x)
+                    if (previousPoint !== null) {
 
-                    if(lastSlope != null) {
-                        if(Math.abs(slope - lastSlope) <= 0.01) {
-                            lastSlope = slope
-                            //console.log(lastSlope)
-                            continue
-                        }
-
+                        drawLine(previousPoint[0], previousPoint[1], x, y, indexOfColor);
                     }
 
-                    //plotPoint(x, y)
-                    drawLine(lastPoint[0], lastPoint[1], x, y, indexOfColor)
-                    lastPoint = [x, y]
-                    lastSlope = slope
-                    //console.log(lastSlope)
+                    previousPoint = [x, y];
+
                 } 
                 
                 catch (e) {
-                    lastPoint = null;
+                    previousPoint = null;
                 }
-
             }
+
         }
     }
 
@@ -301,14 +281,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(information == "invalid") {return}
                 if(!(Array.isArray(information))) {return}
 
-
                 graphLineFromInfo(information, i)
             
             });
         }
     }    
     
-
     function itemCheck() {
         for (let i = 1; i <= amountOfInserts; i++) {
             const input = document.getElementById(`where_the_math_goes_${i}`);
@@ -317,6 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let dieKuh = new Image()
                 dieKuh.src = "../static/img/DieKueh.jpg"
                 ctx.drawImage(dieKuh, 0, 0, width, height)
+            
             }
 
             let information = getEquationTypeFromInput(input.value.toString())

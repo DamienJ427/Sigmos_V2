@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mathToDo = mathToDo.replaceAll('√', 'sqrt')
         mathToDo = mathToDo.replaceAll('π', 'pi')
 
-        console.log(mathToDo)
+        //console.log(mathToDo)
         return mathToDo
     
     }
@@ -113,8 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         catch (error) {
-            console.log(doMath(mathInput.value))
-            console.log(error)
+            //console.log(doMath(mathInput.value))
+            //console.log(error)
             alert("BOII TS BROKEN!")
         }
     })
