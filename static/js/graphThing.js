@@ -52,13 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
     var width = canvas.width;
     var height = canvas.height;
     const ratio = 3/2;
-    var baseSize = 20;
+    var baseSize = 10;
     var squareSizeX = width / (baseSize * ratio);
     var squareSizeY = height / baseSize;
     var amountOfSquaresX = width / squareSizeX
     var amountOfSquaresY = height / squareSizeY
 
-    const listOfColors = ["rgb(26, 94, 220)", "rgb(26, 220, 107)", "rgb(220, 26, 26)", "rgb(204, 26, 220)", "rgb(255, 145, 0)", "rgb(0, 0, 0)", 'rgb(80, 0, 104)']
+    const listOfColors = ["rgb(26, 94, 220)", "rgb(26, 220, 107)", "rgb(220, 26, 26)", "rgb(204, 26, 220)", "rgb(255, 145, 0)", "rgb(0, 0, 0)", 'rgb(80, 0, 104)', 'rgb(16, 250, 203)']
 
     var offsetX = 0;
     var offsetY = 0;
@@ -92,10 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let x = startX; x <= endX; x++) {
 
-            /*
-            if(x % 4 == 0) {ctx.strokeStyle = '#000000'}
-            else{ctx.strokeStyle = '#666666'}
-            */
+            ctx.fillStyle = '#000000';
+            ctx.fillText((x - amountOfSquaresX / 2).toString(), x * squareSizeX + offsetX + 2, height / 2 + offsetY - 2);
            
             const xPos = x * squareSizeX + offsetX;
             ctx.beginPath();
@@ -114,6 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if(y % 4 == 0) {ctx.strokeStyle = '#000000'}
             else{ctx.strokeStyle = '#666666'}
             */
+
+            ctx.fillStyle = '#000000';
+            ctx.fillText(-(y - amountOfSquaresY / 2).toString(), width / 2 + offsetX + 2, y * squareSizeY + offsetY + 10);
 
             const yPos = y * squareSizeY + offsetY;
             ctx.beginPath();
@@ -191,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.lineTo(endingCords[0], endingCords[1]);
         ctx.strokeStyle = listOfColors[i];
         ctx.stroke();
-
     }
     
 
@@ -225,14 +225,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const soThatJSdoesntKillMe = doMath(information[2]);
 
-            let step = Math.max(0.05, 1 / squareSizeX);
+            let step = Math.max(0.1, 1 / squareSizeX);
 
             let previousPoint = null;
 
             for (let x = minXVisible; x <= maxXVisible; x += step) {
 
                 let xEquation = soThatJSdoesntKillMe.replaceAll("x", "(" + x.toString() + ")");
-                
 
                 try {
                     let y = math.evaluate(xEquation);
@@ -266,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const soThatJSdoesntKillMe = doMath(information[2]);
 
-            let step = Math.max(0.05, 1 / squareSizeX);
+            let step = Math.max(0.1, 1 / squareSizeX);
 
             let previousPoint = null;
 
@@ -399,7 +398,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addNewItemButton.style.cursor = 'pointer';
 
-
     function onMouseMove(event) {
         if (!isDragging || isFightingWyatt) return;
 
@@ -434,6 +432,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function onScrollOut() {
         if(isFightingWyatt) { return }
         baseSize = baseSize + 1;
+        offsetX = offsetX - (squareSizeX / 2)
+        offsetY = offsetY - (squareSizeY / 2)
         refreshCanvas(1);
     }
 
@@ -441,6 +441,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if(isFightingWyatt) { return }
         if (baseSize > 1) {
             baseSize = baseSize - 1;
+            offsetX = offsetX + (squareSizeX / 2)
+            offsetY = offsetY + (squareSizeY / 2)
             refreshCanvas(-1);
         }
     }

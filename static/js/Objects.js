@@ -29,6 +29,10 @@ export class Player {
     deflate() {
         this.sizeX /= 1.5;
         this.sizeY /= 1.5;
+        this.speed *= 5;
+        this.x += (this.sizeX / 6);
+        this.y += (this.sizeY / 6);
+        this.inflated = false;
     }
 
     draw(ctx) {
@@ -83,27 +87,32 @@ export class Player {
     isColliding(other) {
 
         var playerBounds = {
-            left: this.x  * 2 / 4,
-            right: (this.x + this.sizeX) * 2 / 4,
-            top: this.y  * 2 / 4,
-            bottom: (this.y + this.sizeY)  * 2 / 4
+            left: this.x,
+            right: (this.x + this.sizeX),
+            top: this.y,
+            bottom: (this.y + this.sizeY)
         };
 
         var otherBounds = {
-            left: other.x  * 2 / 4,
-            right: (other.x + other.sizeX) * 2 / 4,
-            top: other.y  * 2 / 4,
-            bottom: (other.y + other.sizeY)  * 2 / 4
+            left: other.x  + 5,
+            right: (other.x + other.sizeX) - 5,
+            top: other.y  + 5,
+            bottom: (other.y + other.sizeY) - 5
         };
         
         return !(playerBounds.right < otherBounds.left || playerBounds.left > otherBounds.right || playerBounds.bottom < otherBounds.top || playerBounds.top > otherBounds.bottom);
+    }
+
+    isInflated() {
+        return this.inflated;
     }
 
 
 }
 
 export class Projectile {
-    constructor(x, y, speed, directionX, directionY, sizeX, sizeY, image) {
+    constructor(x, y, speed, directionX, directionY, sizeX, sizeY, image, id, damage) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.speed = speed;
@@ -111,6 +120,8 @@ export class Projectile {
         this.directionY = directionY;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
+        this.image = image;
+        this.damage = damage;
     }
 
     update() {
@@ -128,10 +139,18 @@ export class Projectile {
         }
     }
 
+    getId() {
+        return this.id;
+    }
+
     destroy() {
         this.x = -1000;
         this.y = -1000;
         this.speed = 0;
+    }
+
+    getDamage() {
+        return this.damage;
     }
 
 

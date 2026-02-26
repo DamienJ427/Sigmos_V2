@@ -4,12 +4,17 @@ import * as Dialouge from "../dialouge/Wyatt.js"
 var canvas = document.getElementById('graphing-calc-canvas')
 var ctx = canvas.getContext('2d');
 var keysPressed = {}
+var lastFrameTime = performance.now();
 
 var currentAttack = "Intro";
-var attacks = ["ChickenPatty", "Attack2", "Attack3", "Attack4", "Attack5"]
+var attacks = Array("ChickenPatty", "WeridThings")
+var attackAmount = 0;
 var items =[]
 var attackStartFrame = 0;
+var currentTaunt = null;
 
+var hasPressedEnter = false;
+var generalAssumedFramesPerSecond = 30
 var currentFrame = 0;
 
 var graphingGraphThing = document.getElementById('graphingGraphThing');
@@ -47,12 +52,22 @@ export function startTheFight() {
     })
 
     playerOrign = {x: (canvas.width / 2), y: (canvas.height * (3 / 5) + (canvas.height / 8))}
-    player = new Objects.Player(playerOrign.x, playerOrign.y, 100, 1.5, canvas.width / 24, canvas.width / 24, playerImage)
+    player = new Objects.Player(playerOrign.x, playerOrign.y, 100, 3, canvas.width / 24, canvas.width / 24, playerImage)
 
     wyatt = new Objects.Enemy((canvas.width / 2) - canvas.width / 6, (canvas.height / 2) - canvas.width / 3, canvas.width / 3, canvas.width / 3, 67410, wyattImage)
-
+    lastFrameTime = performance.now();
     updateFrame()
 
+}
+
+function getFramesPerSecond() {
+    
+    var now = performance.now();
+    var delta = now - lastFrameTime;
+    lastFrameTime = now;
+    var fps = 1000 / delta;
+    return Math.round(fps);
+    
 }
     
 function updateFrame() {
@@ -70,8 +85,9 @@ function updateFrame() {
     if (keysPressed['a']) player.move(-1, 0)
     if (keysPressed['s']) player.move(0, 1)
     if (keysPressed['d']) player.move(1, 0)
+    if (keysPressed['enter']) { hasPressedEnter = true }
 
-    navbar.innerHTML = "<h1 style='color: #ffffff;' id='wyattTitle'>DUGMOS</h1><div style='color: #ffffff;' id='wyattHealth'>Wyatt's Health: " + wyatt.getHealth() + "</div>"
+    navbar.innerHTML = "<h1 style='color: #ffffff;' id='wyattTitle'>DUGMOS</h1><div style='color: #ffffff;' id='wyattHealth'>Wyatt's Health: " + wyatt.getHealth() + " | Your Health: " + player.getHealth() + "</div>"
         
     player.draw(ctx)
     wyatt.draw(ctx)
@@ -81,8 +97,12 @@ function updateFrame() {
         items[i].draw(ctx);
         
         if (player.isColliding(items[i])) {
-            player.inflate();
+            if(items[i].getId() == "ChickenPatty") {
+                player.inflate();
+            }
+            player.takeDamage(items[i].getDamage());
             items[i].destroy();
+            
         }
     }
 
@@ -124,9 +144,107 @@ function drawWrappedCenteredText(ctx, text, centerX, centerY, maxWidth, lineHeig
 }
 
 function attackLoop(currentFrame) {
+
     if (currentAttack == "Intro") {
-        if (currentFrame % 10 == 0) {
+
+        if(!(temporarySpeech.length >= Dialouge.introduction.length)) {
+            if (hasPressedEnter) {
+                temporarySpeech = Dialouge.introduction
+            }
+            hasPressedEnter = false;
+        }
+            
+
+        if (currentFrame % 2 == 0) {
             temporarySpeech += Dialouge.introduction.charAt(temporarySpeech.length)
+        }
+
+
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        
+        drawWrappedCenteredText(ctx, temporarySpeech, canvas.width / 2, canvas.height / 2, 400, 28);
+
+        if (temporarySpeech.length >= Dialouge.introduction.length) {
+
+            if (hasPressedEnter) {
+                currentAttack = attacks[Math.floor(Math.random() * attacks.length)]
+                attackStartFrame = currentFrame + 100
+                temporarySpeech = ""
+                hasPressedEnter = false
+            }
+
+            
+        }
+    }
+
+    else if (currentAttack == "ChickenPatty") {
+        
+        if (currentFrame == attackStartFrame) {
+
+            if (attackAmount < 10) {
+
+                var chickenPattyImage = new Image();
+                chickenPattyImage.src = "../static/img/ChickenPatty.png"
+
+                var chickenPatty = new Objects.Projectile((((canvas.width / 2) + (canvas.width / 4)) / (Math.random() * 2 + 1)), canvas.height / 8, 4, 0, 1, canvas.width / 10, canvas.width / 10, chickenPattyImage, "ChickenPatty", 5)
+                chickenPatty.image = chickenPattyImage
+                items.push(chickenPatty)
+                attackStartFrame += 50
+                attackAmount++
+
+            }
+
+            else {
+                
+                if(player.isInflated()) {
+                    
+                    player.deflate()
+                }
+                attackAmount = 0;
+                currentAttack = 'Taunt'
+            }
+        }
+    }
+
+    else if(currentAttack == "WeridThings") {
+        if (currentFrame == attackStartFrame) {
+
+            if (attackAmount < 150) {
+
+                var weridTThingImage = new Image();
+                weridTThingImage.src = "../static/img/werid_thing.png"
+
+                var weridThing = new Objects.Projectile(0, canvas.width / 2 * (Math.random() * 2), 10, 1, (Math.random() * 2) - 1, canvas.width / 24, canvas.width / 24, weridTThingImage, "WeridThing", 1)
+                weridThing.image = weridTThingImage
+                items.push(weridThing)
+                attackStartFrame += 5
+                attackAmount++
+
+            }
+
+            else {
+                
+                if(player.isInflated()) {
+                    
+                    player.deflate()
+                }
+                attackAmount = 0;
+                currentAttack = 'Taunt'
+            }
+        }
+    }
+
+    else if(currentAttack == 'Taunt') {
+
+        if(currentTaunt == null) {
+            currentTaunt = Dialouge.taunts[(Math.floor(Math.random() * Dialouge.taunts.length))]
+        }
+
+        if (currentFrame % 2 == 0) {
+            temporarySpeech += currentTaunt.charAt(temporarySpeech.length)
         }
 
         ctx.font = "20px Arial";
@@ -136,25 +254,18 @@ function attackLoop(currentFrame) {
 
         drawWrappedCenteredText(ctx, temporarySpeech, canvas.width / 2, canvas.height / 2, 400, 28);
 
-        if (temporarySpeech.length >= Dialouge.introduction.length) {
-            currentAttack = "ChickenPatty"
-            attackStartFrame = currentFrame
+        if (temporarySpeech.length >= currentTaunt.length) {
+            attackStartFrame = currentFrame + 100
             temporarySpeech = ""
+            currentTaunt = null
+            attackAmount = 0;
+            currentAttack = attacks[Math.floor(Math.random() * attacks.length)]
         }
 
     }
 
-    if (currentAttack == "ChickenPatty") {
-        
-        if (currentFrame == attackStartFrame) {
-            var chickenPattyImage = new Image();
-            chickenPattyImage.src = "../static/img/ChickenPatty.png"
-
-            var chickenPatty = new Objects.Projectile(canvas.width / 3, canvas.height / 8, 2, 0, 1, canvas.width / 10, canvas.width / 10, chickenPattyImage)
-            chickenPatty.image = chickenPattyImage
-            items.push(chickenPatty)
-            attackStartFrame += 100
-        }
+    else {
+        alert("ERROR: UNKNOWN ATTACK " + currentAttack)
     }
 
 }
