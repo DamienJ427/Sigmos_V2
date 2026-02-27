@@ -6,7 +6,7 @@ export const taunts = Array(
 
     "You're a little weak FREAK, aren't you?", 
     "You think you can defeat me?, I am DUG!", 
-    "I am invincible!", 
+    "I am invincible!",
     "You are nothing compared to me! Hahahaha!",
 
 )

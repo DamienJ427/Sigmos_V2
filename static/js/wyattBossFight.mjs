@@ -13,6 +13,8 @@ var items =[]
 var attackStartFrame = 0;
 var currentTaunt = null;
 
+var talkingSpeed = 2
+
 var hasPressedEnter = false;
 var generalAssumedFramesPerSecond = 30
 var currentFrame = 0;
@@ -20,6 +22,8 @@ var currentFrame = 0;
 var graphingGraphThing = document.getElementById('graphingGraphThing');
 
 var temporarySpeech = ""
+
+var fps = null;
 
 var playerOrign = null;
 var playerImage = new Image();
@@ -66,6 +70,7 @@ function getFramesPerSecond() {
     var delta = now - lastFrameTime;
     lastFrameTime = now;
     var fps = 1000 / delta;
+    
     return Math.round(fps);
     
 }
@@ -87,7 +92,8 @@ function updateFrame() {
     if (keysPressed['d']) player.move(1, 0)
     if (keysPressed['enter']) { hasPressedEnter = true }
 
-    navbar.innerHTML = "<h1 style='color: #ffffff;' id='wyattTitle'>DUGMOS</h1><div style='color: #ffffff;' id='wyattHealth'>Wyatt's Health: " + wyatt.getHealth() + " | Your Health: " + player.getHealth() + "</div>"
+    fps = getFramesPerSecond()
+    navbar.innerHTML = "<h1 style='color: #ffffff;' id='wyattTitle'>DUGMOS</h1><div style='color: #ffffff;' id='wyattHealth'>Wyatt's Health: " + fps + " | Your Health: " + player.getHealth() + "</div>"
         
     player.draw(ctx)
     wyatt.draw(ctx)
@@ -100,13 +106,15 @@ function updateFrame() {
             if(items[i].getId() == "ChickenPatty") {
                 player.inflate();
             }
+            
             player.takeDamage(items[i].getDamage());
             items[i].destroy();
             
-        }
+        }   
     }
 
     currentFrame++
+    
 
     attackLoop(currentFrame)
     
@@ -154,8 +162,9 @@ function attackLoop(currentFrame) {
             hasPressedEnter = false;
         }
             
-
-        if (currentFrame % 2 == 0) {
+        
+        if (currentFrame % (2 * math.round(fps / generalAssumedFramesPerSecond)) == 0) {
+            
             temporarySpeech += Dialouge.introduction.charAt(temporarySpeech.length)
         }
 
@@ -179,6 +188,7 @@ function attackLoop(currentFrame) {
             
         }
     }
+    
 
     else if (currentAttack == "ChickenPatty") {
         
@@ -189,10 +199,11 @@ function attackLoop(currentFrame) {
                 var chickenPattyImage = new Image();
                 chickenPattyImage.src = "../static/img/ChickenPatty.png"
 
-                var chickenPatty = new Objects.Projectile((((canvas.width / 2) + (canvas.width / 4)) / (Math.random() * 2 + 1)), canvas.height / 8, 4, 0, 1, canvas.width / 10, canvas.width / 10, chickenPattyImage, "ChickenPatty", 5)
+                var chickenPatty = new Objects.Projectile((((canvas.width / 2) + (canvas.width / 4)) / (Math.random() * 2 + 1)), canvas.height / 8, 20 / (Math.round(fps / generalAssumedFramesPerSecond)) , 0, 1, canvas.width / 10, canvas.width / 10, chickenPattyImage, "ChickenPatty", 5)
                 chickenPatty.image = chickenPattyImage
                 items.push(chickenPatty)
-                attackStartFrame += 50
+                attackStartFrame += 16 * (Math.round(fps / generalAssumedFramesPerSecond))
+                console.log(fps)
                 attackAmount++
 
             }
@@ -203,6 +214,7 @@ function attackLoop(currentFrame) {
                     
                     player.deflate()
                 }
+
                 attackAmount = 0;
                 currentAttack = 'Taunt'
             }
@@ -210,17 +222,20 @@ function attackLoop(currentFrame) {
     }
 
     else if(currentAttack == "WeridThings") {
+        
         if (currentFrame == attackStartFrame) {
 
-            if (attackAmount < 150) {
+            if (attackAmount < 75) {
+
+                console.log("CMing")
 
                 var weridTThingImage = new Image();
                 weridTThingImage.src = "../static/img/werid_thing.png"
 
-                var weridThing = new Objects.Projectile(0, canvas.width / 2 * (Math.random() * 2), 10, 1, (Math.random() * 2) - 1, canvas.width / 24, canvas.width / 24, weridTThingImage, "WeridThing", 1)
+                var weridThing = new Objects.Projectile(0, canvas.width / 2 * (Math.random() * 2), 40 / (Math.round(fps / generalAssumedFramesPerSecond)), 1, ((Math.random() * 2) - 1) / 2, canvas.width / 32, canvas.width / 32, weridTThingImage, "WeridThing", 1)
                 weridThing.image = weridTThingImage
                 items.push(weridThing)
-                attackStartFrame += 5
+                attackStartFrame += 10
                 attackAmount++
 
             }
@@ -243,7 +258,16 @@ function attackLoop(currentFrame) {
             currentTaunt = Dialouge.taunts[(Math.floor(Math.random() * Dialouge.taunts.length))]
         }
 
-        if (currentFrame % 2 == 0) {
+        if(!(temporarySpeech.length >= currentTaunt.length)) {
+            if (hasPressedEnter) {
+                temporarySpeech = currentTaunt
+            }
+
+            hasPressedEnter = false;
+
+        }
+
+        if (currentFrame % (2 * math.round(fps / generalAssumedFramesPerSecond)) == 0) {
             temporarySpeech += currentTaunt.charAt(temporarySpeech.length)
         }
 
@@ -255,11 +279,14 @@ function attackLoop(currentFrame) {
         drawWrappedCenteredText(ctx, temporarySpeech, canvas.width / 2, canvas.height / 2, 400, 28);
 
         if (temporarySpeech.length >= currentTaunt.length) {
-            attackStartFrame = currentFrame + 100
-            temporarySpeech = ""
-            currentTaunt = null
-            attackAmount = 0;
-            currentAttack = attacks[Math.floor(Math.random() * attacks.length)]
+            if(hasPressedEnter) {
+                attackStartFrame = currentFrame + 100
+                temporarySpeech = ""
+                currentTaunt = null
+                attackAmount = 0;
+                hasPressedEnter = false;
+                currentAttack = attacks[Math.floor(Math.random() * attacks.length)]
+            }
         }
 
     }
