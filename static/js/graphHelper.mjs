@@ -67,6 +67,10 @@ export function getEquationTypeFromInput(equation) {
         return ["rtriangle"]
     }
 
+    if(eq.includes("diamond")) {
+        return ["diamond"]
+    }
+
 
     try {
         var points = eq.split(",")

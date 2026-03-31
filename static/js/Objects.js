@@ -150,7 +150,7 @@ export class Player {
 }
 
 export class Projectile {
-    constructor(x, y, speed, directionX, directionY, sizeX, sizeY, image, id, damage) {
+    constructor(x, y, speed, directionX, directionY, sizeX, sizeY, image, id, damage, decayTime = 9999999, destroyOnDeath = false) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -161,11 +161,21 @@ export class Projectile {
         this.sizeY = sizeY;
         this.image = image;
         this.damage = damage;
+        this.decayTime = decayTime;
+        this.destroyOnDeath = false;
     }
 
     update() {
         this.x += this.speed * this.directionX;
         this.y += this.speed * this.directionY;
+        this.decayTime = this.decayTime - 1
+        if(this.decayTime == 0 && this.destroyOnDeath) {
+            this.destroy()
+        }
+    }
+
+    getDecayTime() {
+        return this.decayTime;
     }
 
     getPosition() {

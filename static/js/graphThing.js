@@ -263,25 +263,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         else if (information[0] == 'square') {
-            document.getElementById(`where_the_math_goes_${indexOfColor + 1}`).value = "shape([-1,-1][-1,1][1,1][1,-1])"
+            document.getElementById(`where_the_math_goes_${indexOfColor + 1}`).value = "shape([-1, -1][-1, 1][1, 1][1, -1])"
             refreshCanvas(0)
         }
 
         else if (information[0] == 'rtriangle') {
-            document.getElementById(`where_the_math_goes_${indexOfColor + 1}`).value = "shape([-1,0][1,0][1,2])"
+            document.getElementById(`where_the_math_goes_${indexOfColor + 1}`).value = "shape([-1, 0][1, 0][1, 2])"
             refreshCanvas(0)
         }
 
 
-        else if (information[0] == 'hghghg') {
-            document.getElementById(`where_the_math_goes_${indexOfColor + 1}`).value = "shape([-2,3][2,3][3,2][0,-1][-3,2])"
+        else if (information[0] == 'diamond') {
+            document.getElementById(`where_the_math_goes_${indexOfColor + 1}`).value = "shape([-2, 1.5][2, 1.5][3, 0.5][0, -2.5][-3, 0.5])"
             refreshCanvas(0)
         }
 
-        else if (information[0] == 'cm') {
-            document.getElementById(`where_the_math_goes_${indexOfColor + 1}`).value = "shape([-2,3][2,3][3,2][0,-1][-3,2])"
-            refreshCanvas(0)
-        }
+        
 
         else if (information[0] == "LSFY") {
 

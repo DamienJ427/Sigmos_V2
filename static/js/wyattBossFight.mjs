@@ -172,8 +172,11 @@ function updateFrame() {
             angleDifference = Math.atan2(Math.sin(angleDifference), Math.cos(angleDifference))
 
             currentAngle += (angleDifference * .075)
-
-            head.changeDirection(Math.cos(currentAngle), Math.sin(currentAngle))
+            
+            if (head.getDecayTime() > 0) {
+                head.changeDirection(Math.cos(currentAngle), Math.sin(currentAngle))
+            }
+            
             if (currentAttack == "Taunt") {
                 items[i].destroy();
             }
@@ -366,14 +369,25 @@ function attackLoop(currentFrame) {
 
             if (attackAmount < 10) {
 
+                
+                let positions = [
+                    {x: 0, y: 0},
+                    {x: canvas.width, y: 0},
+                    {x: 0, y: canvas.height},
+                    {x: canvas.width, y: canvas.height}
+                ]
+
+                let randomPosition = positions[math.round(math.random(0, 3))]
+
+
                 var tipheadImage = new Image();
                 tipheadImage.src = "../static/img/tiphead.png"
 
-                var tiphead = new Objects.Projectile(canvas.width / 2, canvas.height / 4, 12 / (Math.round(fps / generalAssumedFramesPerSecond)), 1, 0, canvas.width / 16, canvas.width / 16, tipheadImage, "tiphead", 5)
+                var tiphead = new Objects.Projectile(randomPosition["x"], randomPosition["y"], 12 / (Math.round(fps / generalAssumedFramesPerSecond)), 1, 0, canvas.width / 16, canvas.width / 16, tipheadImage, "tiphead", 5, fps * 2, false)
                 tiphead.image = tipheadImage
                 items.push(tiphead)
                 
-                attackStartFrame += 60 * (Math.ceil(fps / generalAssumedFramesPerSecond))
+                attackStartFrame += 45 * (Math.ceil(fps / generalAssumedFramesPerSecond))
                 attackAmount++
 
             }

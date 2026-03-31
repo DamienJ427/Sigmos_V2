@@ -45,8 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const ln = document.getElementById('ln')
     const mathInput = document.getElementById('math')
 
-
-
     let previousAnswer = localStorage.getItem('PreviousAnswer')
 
     mathInput.setAttribute("placeholder", previousAnswer ? "Previous Answer: " + previousAnswer : "0")
