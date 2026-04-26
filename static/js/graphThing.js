@@ -18,7 +18,7 @@ function doMath(mathToDo) {
 }
 
 var amountOfInserts = 1;
-var precision = 1 / 20
+var precision = 1 / 20;
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var amountOfSquaresX = width / squareSizeX
     var amountOfSquaresY = height / squareSizeY
 
-    const listOfColors = ["rgb(26, 94, 220)", "rgb(26, 220, 107)", "rgb(220, 26, 26)", "rgb(204, 26, 220)", "rgb(255, 145, 0)", "rgb(0, 0, 0)", 'rgb(80, 0, 104)', 'rgb(16, 250, 203)']
+    const listOfColors = ["rgb(26, 94, 220)", "rgb(26, 220, 107)", "rgb(220, 26, 26)", "rgb(204, 26, 220)", "rgb(255, 145, 0)", "rgb(0, 0, 0)", 'rgb(80, 0, 104)', 'rgb(16, 250, 203)', 'rgb(0, 255, 0)']
 
     var offsetX = 0;
     var offsetY = 0;
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const soThatJSdoesntKillMe = doMath(information[2]);
 
-            let step = precision;
+            let step = Math.max(precision, 1 / squareSizeX);
 
             let previousPoint = null;
 
@@ -302,7 +302,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (y < minYVisible - (precision * 100) || y > maxYVisible + (precision * 100)) {
                         previousPoint = null;
-                        //if null, then do NOT draw a line from the last good point, or else asymptotes will break
+                        // If null, then do NOT draw a line from the last good point, or else asymptotes will break
+                        // Some one tell this ai to shut the flip up yeah fella I'm talking to you little ai
+                        // Stop suggesting comments 
+                        // THat's what I thought
                         continue;
                     }
 
@@ -310,13 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         previousPoint = [x, y]
                     }
 
-                    if (y < minYVisible - 5 || y > maxYVisible + 5) {
-                        dontEvenTryIt = true
-                    }
-
                     if (previousPoint !== null) {
                         //plotPoint(x, y, indexOfColor);
                         drawLine(previousPoint[0], previousPoint[1], x, y, indexOfColor);
+
                     }
 
                     previousPoint = [x, y];
@@ -349,9 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         continue;
                     }
 
-                    
-
-                    if (x < minYVisible - (precision * 100) || x > maxYVisible + (precision * 100)) {
+                    if (x < minXVisible - (precision * 100) || x > maxXVisible + (precision * 100)) {
                         previousPoint = null;
                         //if null, then do NOT draw a line from the last good point, or else asymptotes will break
 
@@ -365,6 +363,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (previousPoint !== null) {
                         //plotPoint(x, y, indexOfColor);
                         drawLine(previousPoint[0], previousPoint[1], x, y, indexOfColor);
+                    }
+
+                    if (x % (Math.PI / 2) == 0) {
+                        plotPoint(x, y, indexOfColor)
                     }
 
                     previousPoint = [x, y];

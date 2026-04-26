@@ -12,7 +12,8 @@ var currentAttack = "Intro";
 var attacks = Array("ChickenPatty", "WeridThings", "Highlighter", "Tiphead")
 var attackAmount = 0;
 
-var items =[]
+var items = []
+var dialogueSpoken = []
 
 var currentTaunt = null;
 
@@ -33,6 +34,12 @@ var player = null;
 
 var wyattImage = new Image();
 wyattImage.src = "../static/img/WyattSprites/wyatt.png"
+
+var explosion = new Image();
+explosion.src = "../static/img/explosion.webp"
+
+var creeper = new Image();
+creeper.src = "../static/img/creeper.png"
 var wyatt = null;
 var wyattPosition = null;
 
@@ -81,6 +88,10 @@ function getFramesPerSecond() {
 
 function write(text, canSpeedUp = true, canSkip = true, isAnAction = false) {
 
+    if (dialogueSpoken.includes(text)) {
+        return "Done"
+    }
+
     var stuffToActuallyWrite = text.replace("[stop]", "").replace("[next]", "")
 
     if(!(temporarySpeech.length >= stuffToActuallyWrite)) {
@@ -108,6 +119,7 @@ function write(text, canSpeedUp = true, canSkip = true, isAnAction = false) {
     if (temporarySpeech.length >= stuffToActuallyWrite.length) {
         if(keysPressed['enter'] && canSkip) {
             temporarySpeech = ""
+            dialogueSpoken.push(text)
             return "Done"
         }
     }
@@ -247,6 +259,7 @@ function attackLoop(currentFrame) {
             player.health = 100
             currentAttack = "Intro"
             currentSpeech = 0
+            dialogueSpoken = []
             if(player.isInflated()) {
                 player.deflate()
             }
@@ -410,9 +423,31 @@ function attackLoop(currentFrame) {
     else if(currentAttack == 'Taunt') {
 
         if(taunt() == "Done") {
-            currentAttack = attacks[Math.floor(Math.random() * attacks.length)]
+            if (Dialouge.taunts[currentSpeech].includes("[final]")) {
+                currentAttack = "Final"
+            }
+            else {
+                currentAttack = attacks[Math.floor(Math.random() * attacks.length)]
+            }
             attackStartFrame = currentFrame + 10 * (Math.round(fps / generalAssumedFramesPerSecond))
         }
+    }
+
+    else if(currentAttack == "Final") {
+
+        if (write("Let's see you survive THIS!!", false, true, false) == "Done") {
+            ctx.drawImage(creeper, (canvas.width) - (creeper.width), (canvas.height / 2) - (creeper.height / 2), creeper.width / 2, creeper.height / 2)
+            if(write("OH NO! MY GREATEST ENEMY!!", false, true, false) == "Done") {
+                ctx.drawImage(explosion, (canvas.width / 2) - canvas.width / 6, (canvas.height / 2) - canvas.width / 3, canvas.width / 3, canvas.width / 3)
+                if(write("Guh! You... you... defeated me, no this CAN'T BE!", false, true, false) == "Done") {
+                    ctx.rotate(1 * Math.PI / 180)
+                    if (write("Nooo!", false, true, false) == "Done") {
+                        //ctx.rotate(-2 * Math.PI / 180)
+                    }
+                }
+            }
+        }
+
     }
     
 
