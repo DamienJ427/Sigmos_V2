@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     if (x % (Math.PI / 2) == 0) {
-                        plotPoint(x, y, indexOfColor)
+                        //plotPoint(x, y, indexOfColor)
                     }
 
                     previousPoint = [x, y];
@@ -450,7 +450,14 @@ document.addEventListener('DOMContentLoaded', () => {
         againWithTheBlocks.style.display = 'flex';
         againWithTheBlocks.style.height = '15%';
         againWithTheBlocks.style.width = '100%';
-        againWithTheBlocks.innerHTML = `<h2 class="whatever_this_thing_is_called">${amountOfInserts}</h2><input class="graphing-calc-text" type="text" id="where_the_math_goes_${amountOfInserts}" placeholder="...">`;
+
+        var indexOfColor = amountOfInserts - 1
+
+        while(indexOfColor > listOfColors.length - 1) {
+            indexOfColor = indexOfColor - (listOfColors.length - 1)
+        }
+
+        againWithTheBlocks.innerHTML = `<h2 style="background-color: ${listOfColors[indexOfColor]}" id="whatever_this_thing_is_called_${amountOfInserts}" class="whatever_this_thing_is_called">${amountOfInserts}</h2><input class="graphing-calc-text" type="text" id="where_the_math_goes_${amountOfInserts}" placeholder="...">`;
         whereYouPutMath.insertBefore(againWithTheBlocks, addNewItemButton);
 
         readdListeners();

@@ -197,11 +197,12 @@
 
 .whatever_this_thing_is_called {
     text-align: left;
+    color: #ffffff;
     height: 100%;
     width: 20%;
     text-indent: .5dvw;
     font-size: 15px;
-    background-color: rgb(212, 212, 212);
+    background-color: rgb(26, 94, 220);
     border: 1px solid #000000;
 }
 
