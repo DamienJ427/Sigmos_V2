@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         thingToCheck = thingToCheck.toLowerCase()
 
-        if (thingToCheck.includes("67")) {
+        if (thingToCheck == "67") {
             window.location.href = "static/videos/67.mp4"
         }
     }
