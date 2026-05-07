@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var amountOfSquaresX = width / squareSizeX
     var amountOfSquaresY = height / squareSizeY
 
-    const listOfColors = ["rgb(26, 94, 220)", "rgb(26, 220, 107)", "rgb(220, 26, 26)", "rgb(204, 26, 220)", "rgb(255, 145, 0)", "rgb(0, 0, 0)", 'rgb(80, 0, 104)', 'rgb(16, 250, 203)', 'rgb(0, 255, 0)']
+    const listOfColors = ["rgb(26, 94, 220)", "rgb(0, 255, 106)", "rgb(220, 26, 26)", "rgb(204, 26, 220)", "rgb(255, 145, 0)", "rgb(0, 0, 0)", 'rgb(80, 0, 104)', 'rgb(16, 250, 203)']
 
     var offsetX = 0;
     var offsetY = 0;
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         var indexOfColor = i - 1
 
         while(indexOfColor > listOfColors.length - 1) {
-            indexOfColor = indexOfColor - (listOfColors.length - 1)
+            indexOfColor = indexOfColor - (listOfColors.length)
         }
         
         if (information[0] == 'point') {
@@ -450,15 +450,24 @@ document.addEventListener('DOMContentLoaded', () => {
         againWithTheBlocks.style.display = 'flex';
         againWithTheBlocks.style.height = '15%';
         againWithTheBlocks.style.width = '100%';
+        
+
+        
 
         var indexOfColor = amountOfInserts - 1
 
         while(indexOfColor > listOfColors.length - 1) {
-            indexOfColor = indexOfColor - (listOfColors.length - 1)
+            indexOfColor = indexOfColor - (listOfColors.length)
         }
 
         againWithTheBlocks.innerHTML = `<h2 style="background-color: ${listOfColors[indexOfColor]}" id="whatever_this_thing_is_called_${amountOfInserts}" class="whatever_this_thing_is_called">${amountOfInserts}</h2><input class="graphing-calc-text" type="text" id="where_the_math_goes_${amountOfInserts}" placeholder="...">`;
         whereYouPutMath.insertBefore(againWithTheBlocks, addNewItemButton);
+
+        let bruh = document.getElementById("where_you_put_math")
+        bruh.style.height =  (bruh.offsetHeight + againWithTheBlocks.offsetHeight) + "px"
+
+        alert(bruh.offsetHeight)
+        alert(againWithTheBlocks.offsetHeight)
 
         readdListeners();
     });
